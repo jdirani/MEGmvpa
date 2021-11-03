@@ -297,7 +297,7 @@ def plot_temporal_scores_ideogram(scores_words, scores_images, times, fname, cha
     ax.set_xlabel('Time (ms)')
     ax.set_ylabel('Score')
     ax.legend()
-    ax.set_title('Sensor space decoding')
+    ax.set_title('Temporal decoding')
     fig.savefig(fname)
     plt.close()
 # =========================================================  #
