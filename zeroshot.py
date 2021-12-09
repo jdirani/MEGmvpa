@@ -7,7 +7,6 @@ Sudre, G., Pomerleau, D., Palatucci, M., Wehbe, L., Fyshe, A., Salmelin, R., & M
 '''
 
 from itertools import combinations
-# from multiprocessing import Pool
 from joblib import Parallel, delayed
 from scipy.spatial.distance import cosine
 from tqdm import tqdm
