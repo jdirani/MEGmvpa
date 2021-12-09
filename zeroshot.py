@@ -1,11 +1,3 @@
-'''
-See:
-Hultén, A., van Vliet, M., Kivisaari, S., Lammi, L., Lindh‐Knuutila, T., Faisal, A., & Salmelin, R. (2021). The neural representation of abstract words may arise through grounding word meaning in language itself. Human brain mapping, 42(15), 4973-4984.
-Palatucci, M., Pomerleau, D., Hinton, G. E., & Mitchell, T. M. (2009). Zero- shot learning with semantic output codes (pp. 1410–1418). Pittsburgh, PA: Carnegie Mellon University.
-Sudre, G., Pomerleau, D., Palatucci, M., Wehbe, L., Fyshe, A., Salmelin, R., & Mitchell, T. (2012). Tracking neural coding of perceptual and semantic features of concrete nouns. NeuroImage, 62(1), 451-463.
-
-'''
-
 from itertools import combinations
 from joblib import Parallel, delayed
 from scipy.spatial.distance import cosine
@@ -206,4 +198,3 @@ def zeroshot_classification_condGen(X_train, X_test, y_train, y_test, clf, n_job
 #         accuracy = sum(hits) / len(hits)
 #
 #         return accuracy
-
