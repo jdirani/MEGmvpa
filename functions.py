@@ -116,29 +116,6 @@ def PCA_epochsArray(array, n_comp):
     print('PCA explained var:%.3f'%explained_var)
     return pca_data
 
-# def PCA_evokeds_ideogram(evokeds_image, evokeds_word, n_comp):
-#     '''
-#     Fit PCA on grand average of all evokeds, then transform evokeds_image and evokeds_word.
-#
-#     evokeds_image : np.array of evoked responses for the image modality (ntrials x nsensors x ntimes)
-#     evokeds_words : np.array of evoked responses for the image modality (ntrials x nsensors x ntimes)
-#     n_comp : number of components to keep
-#
-#     '''
-#
-#     all_evokeds_data = np.array([i.data for i in evokeds_image + evokeds_word])  # concat data of all evokeds
-#     mdl_PCA = PCA(n_comp)
-#     pca = UnsupervisedSpatialFilter(mdl_PCA, average=False)
-#     pca.fit(X=all_evokeds_data) # fit on the concatenated evokeds
-#     # transform seperately on images and words
-#     pca_evokeds_image = pca.transform(np.array([i.data for i in evokeds_image]))
-#     pca_evokeds_word = pca.transform(np.array([i.data for i in evokeds_word]))
-#
-#     explained_var = np.cumsum(mdl_PCA.explained_variance_ratio_)[-1]
-#     print('PCA explained var:%.3f'%explained_var)
-#
-#     return pca_evokeds_image, pca_evokeds_word
-
 
 
 # ============================= DECODING ===================================== #
@@ -192,19 +169,6 @@ def plot_temporal_scores(scores, times, fname, chance_level=None, figsize=[12,4]
         plt.close()
 
 
-# Not working. See : https://mne.tools/dev/auto_tutorials/machine-learning/50_decoding.html#sphx-glr-auto-tutorials-machine-learning-50-decoding-py
-# def plot_temporal_decoding_topomap(X, y, mdl, scoring, cv=5, times, info, n_jobs=1):
-#
-#     clf = make_pipeline(StandardScaler(), LinearModel(mdl))
-#     time_decod = SlidingEstimator(clf, n_jobs=n_jobs, scoring=scoring, verbose=True)
-#     time_decod.fit(X, y)
-#     coef = get_coef(time_decod, 'patterns_', inverse_transform=True)
-#     evoked_time_gen = mne.EvokedArray(coef, info, tmin=times[0])
-#     joint_kwargs = dict(ts_args=dict(time_unit='ms'), topomap_args=dict(time_unit='ms'))
-#     evoked_time_gen.plot_joint(times=times, title='patterns', **joint_kwargs)
-
-
-
 
 def cross_time_cond_gen(X_train, X_test, y_train, y_test, mdl, scoring, n_jobs=1):
     '''Train on X_train, test on X_test with generalization accross all time points'''
@@ -217,6 +181,41 @@ def cross_time_cond_gen(X_train, X_test, y_train, y_test, mdl, scoring, n_jobs=1
     scores = time_gen.score(X=X_test, y=y_test)
 
     return scores
+
+
+
+def cross_time_cond_genCV(X_train, X_test, y_train, y_test, mdl, scoring, cv=5, n_jobs=1):
+    '''
+    Train on X_train, test on X_test with generalization accross all time points
+    Cross validation done by training on a subset of X_train  and testing
+    on a subset of X_test, with no repeats of trials accross the train-test split.
+    Order of trials/exemplars in X_train, X_test, y_train, y_test must be the same.
+    '''
+    # create model
+    clf = make_pipeline(StandardScaler(),  mdl)
+    time_gen = GeneralizingEstimator(clf, scoring=scoring, n_jobs=n_jobs, verbose=True)
+    kf = KFold(n_splits=cv)
+
+    scores = []
+    for train_index, test_index in kf.split(X_train):
+        fold_X_train = X_train[train_index]
+        fold_X_test = X_test[test_index]
+
+        fold_y_train = y_train[train_index]
+        fold_y_test = y_test[test_index]
+
+        # Fit
+        time_gen.fit(X=fold_X_train, y=fold_y_train)
+        # Score on other condition
+        fold_scores = time_gen.score(X=fold_X_test, y=fold_y_test)
+
+
+        scores.append(fold_scores)
+
+    scores = np.array(scores)
+
+    return scores
+
 
 
 
