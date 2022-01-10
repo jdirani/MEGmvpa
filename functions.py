@@ -13,7 +13,7 @@ from sklearn.decomposition import PCA
 from sklearn.utils import class_weight
 from sklearn.multiclass import OneVsOneClassifier, OneVsRestClassifier
 from sklearn.svm import LinearSVC
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, KFold
 
 from mne.decoding import GeneralizingEstimator, SlidingEstimator, cross_val_multiscore, UnsupervisedSpatialFilter, Vectorizer
 from mne.decoding import Scaler, get_coef, LinearModel
