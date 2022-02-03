@@ -1,6 +1,7 @@
 import mne
 import numpy as np
 from sklearn.decomposition import PCA
+from mne.decoding import UnsupervisedSpatialFilter
 
 
 def sliding_average(epochs, decim=5):
