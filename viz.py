@@ -34,6 +34,7 @@ def plot_generalization_scores(scores, fname, times, vmin=0, vmax=1, annot=True,
     ax.set_xlabel('Testing Time (s)')
     ax.set_ylabel('Training Time (s)')
     ax.set_title(title)
+    ax.invert_yaxis()
     if fname:
         fig.savefig(fname)
         plt.close()
