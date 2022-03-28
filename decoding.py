@@ -9,6 +9,8 @@ from mne.stats import linear_regression, fdr_correction
 from scipy.spatial import distance
 from tqdm import tqdm
 
+from .preproc import sliding_average
+
 
 def temporal_decoding(X, y, mdl, scoring, cv=5, n_jobs=1):
     '''
