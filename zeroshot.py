@@ -36,8 +36,6 @@ def _leave2out(idx_leave2out, X, y, clf):
 
 def zeroshot_classification(X, y, clf, n_jobs):
     ''''
-    Same as zeroshot_classification() but 5-6x faster.
-
     Zero-shot classification.
     Looping over time dimension not implemented within function. X,y are data
     at time slices with shape [n_trials, n_sensors]
